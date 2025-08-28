@@ -1,0 +1,5 @@
+content,completed_at,created_at,actual_duration_hours,estimated_duration_hours,category,task_type,focus_area,priority,labels,project_id
+Duration,2025-08-28 16:00:42,,,1.0,Other,General Organizing,General Anti-Imperialism,Normal,[],2359100853
+Add .ico file,2025-08-28 13:53:03,,,1.0,Other,General Organizing,General Anti-Imperialism,Normal,[],2359100853
+Advise email migration,2025-08-28 13:53:01,,,1.0,Outreach,Digital Outreach,General Anti-Imperialism,Normal,[],2359100853
+Refactor site for vercel integration,2025-08-28 13:52:58,,,1.0,Other,General Organizing,General Anti-Imperialism,Normal,[],2359100853

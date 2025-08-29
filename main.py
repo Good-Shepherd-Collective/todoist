@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import json
 import csv
 import requests
@@ -14,24 +15,36 @@ class AntiImperialistsAnalyzer:
     def __init__(self):
         self.api_token = os.getenv('TODOIST_API_TOKEN')
         self.headers = {'Authorization': f'Bearer {self.api_token}'}
-        self.project_id = '2359100853'  # Anti-Imperialists project ID
+        self.project_id = '6cjfRCgwFQWGmv3C'  # Anti-Imperialists project ID (v1 format)
         
     def get_completed_items(self):
-        """Get completed items using the Sync API completed items endpoint"""
+        """Get completed items using API v1 completed tasks endpoint"""
         try:
-            response = requests.post(
-                'https://api.todoist.com/sync/v9/completed/get_all',
+            print(f"🔍 Fetching completed tasks from Todoist API v1...")
+            print(f"   Project ID: {self.project_id}")
+            
+            # Get tasks completed in the last 90 days
+            since_date = (datetime.now() - timedelta(days=90)).strftime('%Y-%m-%dT%H:%M:%S')
+            until_date = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+            
+            response = requests.get(
+                'https://api.todoist.com/api/v1/tasks/completed/by_completion_date',
                 headers=self.headers,
-                json={
+                params={
                     'project_id': self.project_id,
+                    'since': since_date,
+                    'until': until_date,
                     'limit': 200
                 }
             )
             
             if response.status_code == 200:
                 data = response.json()
+                # v1 completed tasks endpoint returns 'items' key
                 items = data.get('items', [])
-                print(f"✅ Found {len(items)} completed items in Anti-Imperialists project")
+                print(f"✅ API Response: Found {len(items)} completed items")
+                if len(items) > 0:
+                    print(f"   First item example: {items[0].get('content', 'No content')[:50]}...")
                 return items
             else:
                 print(f"❌ Failed to get completed items: {response.status_code}")
@@ -43,20 +56,26 @@ class AntiImperialistsAnalyzer:
             return []
     
     def get_active_tasks(self):
-        """Get active tasks using REST API"""
+        """Get active tasks using API v1"""
         try:
+            # Get all tasks and filter by project ID
             response = requests.get(
-                'https://api.todoist.com/rest/v2/tasks',
-                headers=self.headers,
-                params={'project_id': self.project_id}
+                'https://api.todoist.com/api/v1/tasks',
+                headers=self.headers
             )
             
             if response.status_code == 200:
-                tasks = response.json()
-                print(f"✅ Found {len(tasks)} active tasks")
+                response_data = response.json()
+                # v1 API wraps results in 'results' key
+                all_tasks = response_data.get('results', []) if isinstance(response_data, dict) else response_data
+                
+                # Filter tasks for this specific project
+                tasks = [task for task in all_tasks if task.get('project_id') == self.project_id]
+                print(f"✅ Found {len(tasks)} active tasks in project (from {len(all_tasks)} total)")
                 return tasks
             else:
                 print(f"❌ Failed to get active tasks: {response.status_code}")
+                print(f"Response: {response.text}")
                 return []
                 
         except Exception as e:
@@ -221,41 +240,19 @@ class AntiImperialistsAnalyzer:
                 self.display_active_tasks(active_tasks)
             return []
         
-        # Process completed tasks
+        # Process completed tasks - keep only Todoist data
         completed_analysis = []
         
         for item in completed_items:
-            content = item.get('content', 'No content')
-            completed_at = item.get('completed_at')
-            item_date = item.get('item_date')  # When task was created
-            labels = item.get('labels', [])
-            
-            enhanced = self.enhance_description(content, labels)
-            estimated_duration = self.estimate_duration(content, enhanced['category'])
-            actual_duration = self.calculate_actual_duration(completed_at, item_date)
-            
-            # Parse completion date
-            completion_date = None
-            if completed_at:
-                try:
-                    completion_date = datetime.fromisoformat(completed_at.replace('Z', '+00:00'))
-                except:
-                    pass
-            
+            # Only keep actual Todoist fields
             task_data = {
                 'id': item.get('id'),
-                'content': content,
-                'completed_at': completion_date,
-                'created_at': item_date,
-                'actual_duration_hours': actual_duration,
-                'estimated_duration_hours': estimated_duration,
-                'category': enhanced['category'],
-                'task_type': enhanced['task_type'],
-                'focus_area': enhanced['focus_area'],
-                'priority': enhanced['priority'],
-                'labels': labels,
-                'project_id': item.get('project_id'),
-                'raw_item': item  # Keep raw data for debugging
+                'content': item.get('content', 'No content'),
+                'description': item.get('description', ''),
+                'completed_at': item.get('completed_at'),
+                'created_at': item.get('created_at'),
+                'labels': item.get('labels', []),
+                'project_id': item.get('project_id')
             }
             
             completed_analysis.append(task_data)
@@ -268,7 +265,6 @@ class AntiImperialistsAnalyzer:
         
         # Display results
         self.display_completed_tasks(completed_analysis)
-        self.display_statistics(completed_analysis)
         
         if active_tasks:
             self.display_active_tasks(active_tasks)
@@ -276,30 +272,28 @@ class AntiImperialistsAnalyzer:
         return completed_analysis
     
     def display_completed_tasks(self, tasks):
-        """Display completed tasks with detailed analysis"""
-        print(f"\n📝 COMPLETED TASKS ANALYSIS:")
+        """Display completed tasks"""
+        print(f"\n📝 COMPLETED TASKS:")
         print("-"*85)
         
         for i, task in enumerate(tasks, 1):
-            print(f"\n{i:2}. ✅ {task['content']}")
+            print(f"\n{i:2}. Task Name: {task.get('content', 'No content')}")
+            print(f"     Description: {task.get('description', 'No description')}")
+            print(f"     Labels: {', '.join(task.get('labels', [])) if task.get('labels') else 'None'}")
             
-            if task['completed_at']:
-                days_ago = (datetime.now() - task['completed_at'].replace(tzinfo=None)).days
+            if task.get('completed_at'):
+                # Parse the date if it's a string
+                if isinstance(task['completed_at'], str):
+                    completed_date = datetime.fromisoformat(task['completed_at'].replace('Z', '+00:00'))
+                else:
+                    completed_date = task['completed_at']
+                    
+                days_ago = (datetime.now() - completed_date.replace(tzinfo=None)).days
                 time_desc = f"{days_ago} days ago" if days_ago > 0 else "Today"
-                print(f"     📅 Completed: {task['completed_at'].strftime('%Y-%m-%d %H:%M')} ({time_desc})")
-            
-            print(f"     📂 Category: {task['category']} → {task['task_type']}")
-            print(f"     🎯 Focus Area: {task['focus_area']}")
-            print(f"     🏆 Priority: {task['priority']}")
-            
-            # Duration information
-            if task['actual_duration_hours']:
-                print(f"     ⏱️  Duration: {task['actual_duration_hours']}h actual | {task['estimated_duration_hours']}h estimated")
+                print(f"     Status: ✅ Completed")
+                print(f"     Completed on: {completed_date.strftime('%Y-%m-%d at %H:%M')} ({time_desc})")
             else:
-                print(f"     ⏱️  Estimated Duration: {task['estimated_duration_hours']} hours")
-            
-            if task['labels']:
-                print(f"     🏷️  Labels: {', '.join(task['labels'])}")
+                print(f"     Status: ✅ Completed (date not available)")
     
     def display_statistics(self, tasks):
         """Generate detailed productivity statistics"""
@@ -398,22 +392,21 @@ class AntiImperialistsAnalyzer:
     
     def display_active_tasks(self, tasks):
         """Display current active tasks"""
-        print(f"\n🔥 CURRENT ACTIVE ORGANIZING TASKS:")
+        print(f"\n🔥 CURRENT ACTIVE TASKS:")
         print("-"*85)
         
         for i, task in enumerate(tasks[:15], 1):
-            enhanced = self.enhance_description(task.get('content', ''))
-            
             # Priority indicators
             priority_map = {1: '🔴', 2: '🟠', 3: '🟡', 4: '⚪'}
             p_emoji = priority_map.get(task.get('priority', 1), '⚪')
             
             print(f"  {i:2}. {p_emoji} {task.get('content', 'No content')}")
-            print(f"      📂 {enhanced['category']} | 🎯 {enhanced['focus_area']}")
-            print(f"      ⏱️  Est: {self.estimate_duration(task.get('content', ''), enhanced['category'])}h")
+            
+            if task.get('description'):
+                print(f"      Description: {task.get('description')}")
             
             if task.get('labels'):
-                print(f"      🏷️  {', '.join(task['labels'])}")
+                print(f"      Labels: {', '.join(task['labels'])}")
             print()
     
     def export_data(self, data, base_filename="anti_imperialists_complete"):
@@ -422,45 +415,33 @@ class AntiImperialistsAnalyzer:
             print("❌ No data to export")
             return
         
-        # CSV Export
+        # CSV Export - only Todoist fields
         csv_filename = f"{base_filename}.csv"
         with open(csv_filename, 'w', newline='', encoding='utf-8') as f:
-            fieldnames = ['content', 'completed_at', 'created_at', 'actual_duration_hours',
-                         'estimated_duration_hours', 'category', 'task_type', 'focus_area',
-                         'priority', 'labels', 'project_id']
+            fieldnames = ['id', 'content', 'description', 'completed_at', 'created_at', 'labels', 'project_id']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             
             for task in data:
                 row = {k: task.get(k, '') for k in fieldnames}
-                if row['completed_at'] and hasattr(row['completed_at'], 'strftime'):
-                    row['completed_at'] = row['completed_at'].strftime('%Y-%m-%d %H:%M:%S')
+                if row['completed_at']:
+                    row['completed_at'] = row['completed_at']
                 if row['labels']:
-                    row['labels'] = ', '.join(row['labels'])
+                    row['labels'] = ', '.join(row['labels']) if isinstance(row['labels'], list) else row['labels']
                 writer.writerow(row)
         
-        # JSON Export with metadata
+        # JSON Export - only Todoist data
         json_filename = f"{base_filename}.json"
-        json_data = []
-        for task in data:
-            task_copy = task.copy()
-            # Remove raw_item to clean up JSON
-            if 'raw_item' in task_copy:
-                del task_copy['raw_item']
-            if task_copy.get('completed_at') and hasattr(task_copy['completed_at'], 'isoformat'):
-                task_copy['completed_at'] = task_copy['completed_at'].isoformat()
-            json_data.append(task_copy)
         
         export_data = {
-            'analysis_metadata': {
-                'analysis_date': datetime.now().isoformat(),
+            'metadata': {
+                'export_date': datetime.now().isoformat(),
                 'project_name': 'Anti-Imperialists',
                 'project_id': self.project_id,
-                'total_completed_tasks': len(json_data),
-                'total_estimated_hours': sum(t['estimated_duration_hours'] for t in data),
-                'data_source': 'Todoist Sync API v9 - completed/get_all'
+                'total_completed_tasks': len(data),
+                'data_source': 'Todoist API v1'
             },
-            'tasks': json_data
+            'tasks': data
         }
         
         with open(json_filename, 'w', encoding='utf-8') as f:
@@ -471,19 +452,63 @@ class AntiImperialistsAnalyzer:
         print(f"  • {json_filename} - Structured data with metadata")
 
 def main():
-    print("🌍 Anti-Imperialists Complete Analysis")
-    print("📡 Using Todoist Sync API v9 - Completed Items Endpoint")
-    
     analyzer = AntiImperialistsAnalyzer()
-    data = analyzer.generate_report()
     
-    if data:
-        print("\n" + "="*85)
-        print(" "*30 + "📊 EXPORTING DATA 📊")
-        print("="*85)
-        analyzer.export_data(data)
+    # Get completed and active tasks
+    completed_items = analyzer.get_completed_items()
+    active_tasks = analyzer.get_active_tasks()
     
-    print(f"\n🎉 Complete analysis of your anti-imperialist organizing work!")
+    # Create JSON output
+    output = {
+        'metadata': {
+            'export_date': datetime.now().isoformat(),
+            'project_name': 'Anti-Imperialists',
+            'project_id': analyzer.project_id,
+            'total_completed_tasks': len(completed_items),
+            'total_active_tasks': len(active_tasks),
+            'data_source': 'Todoist API v1'
+        },
+        'completed_tasks': [],
+        'active_tasks': []
+    }
+    
+    # Process completed tasks
+    for item in completed_items:
+        task_data = {
+            'id': item.get('id'),
+            'content': item.get('content', ''),
+            'description': item.get('description', ''),
+            'completed_at': item.get('completed_at'),
+            'created_at': item.get('added_at'),
+            'labels': item.get('labels', []),
+            'project_id': item.get('project_id'),
+            'priority': item.get('priority')
+        }
+        output['completed_tasks'].append(task_data)
+    
+    # Process active tasks
+    for task in active_tasks:
+        task_data = {
+            'id': task.get('id'),
+            'content': task.get('content', ''),
+            'description': task.get('description', ''),
+            'created_at': task.get('added_at'),  # Active tasks use 'added_at' field
+            'labels': task.get('labels', []),
+            'project_id': task.get('project_id'),
+            'priority': task.get('priority')
+        }
+        output['active_tasks'].append(task_data)
+    
+    # Output as JSON to console
+    json_output = json.dumps(output, indent=2, ensure_ascii=False)
+    print(json_output)
+    
+    # Also save to file
+    json_filename = "anti_imperialists_tasks.json"
+    with open(json_filename, 'w', encoding='utf-8') as f:
+        f.write(json_output)
+    
+    print(f"\n✅ JSON file saved as: {json_filename}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "export_date": "2025-08-29T11:07:11.899768",
+    "project_name": "Anti-Imperialists",
+    "project_id": "6cjfRCgwFQWGmv3C",
+    "total_completed_tasks": 3,
+    "total_active_tasks": 4,
+    "data_source": "Todoist API v1"
+  },
+  "completed_tasks": [
+    {
+      "id": "6cjfRWr7XqPX2WcC",
+      "content": "Refactor site for Vercel deployment",
+      "description": "Need to refactor the site to host it on vercel so I am not managing multiple projects across multiple platforms.",
+      "completed_at": "2025-08-29T07:57:09.091800Z",
+      "created_at": "2025-08-28T10:48:46.449006Z",
+      "labels": [
+        "45 mins"
+      ],
+      "project_id": "6cjfRCgwFQWGmv3C",
+      "priority": 1
+    },
+    {
+      "id": "6cjfRfX985MMqCcj",
+      "content": "Advise email migration",
+      "description": "Provided guidance on email transfer",
+      "completed_at": "2025-08-29T07:57:08.089100Z",
+      "created_at": "2025-08-28T10:49:17.117448Z",
+      "labels": [
+        "15 mins"
+      ],
+      "project_id": "6cjfRCgwFQWGmv3C",
+      "priority": 1
+    },
+    {
+      "id": "6cjfVH9vvQ4cqXvj",
+      "content": "Add .ico file",
+      "description": "Updated favicon for browser. Created icon from logo in photoshop",
+      "completed_at": "2025-08-29T07:57:07.083000Z",
+      "created_at": "2025-08-28T10:53:20.832491Z",
+      "labels": [
+        "20 mins"
+      ],
+      "project_id": "6cjfRCgwFQWGmv3C",
+      "priority": 1
+    }
+  ],
+  "active_tasks": [
+    {
+      "id": "6cjfRRpGgc8GqCQC",
+      "content": "Handle DNS for anti-imperialist and vercel integration",
+      "description": "Change DNS in namecheap to point to Vercel",
+      "created_at": "2025-08-28T10:48:23.432089Z",
+      "labels": [
+        "15 mins"
+      ],
+      "project_id": "6cjfRCgwFQWGmv3C",
+      "priority": 1
+    },
+    {
+      "id": "6cjfRcG72344r2fj",
+      "content": "Add Substack to website",
+      "description": "Generate embed code, style it, and embed it in site. Ensure that emails are being added.",
+      "created_at": "2025-08-28T10:49:02.629247Z",
+      "labels": [
+        "15 mins"
+      ],
+      "project_id": "6cjfRCgwFQWGmv3C",
+      "priority": 1
+    },
+    {
+      "id": "6cjhPWfgJx888MxC",
+      "content": "Change CORS policies",
+      "description": "This provides security instructions between for the website to allow connection to CMS",
+      "created_at": "2025-08-28T17:01:02.732369Z",
+      "labels": [
+        "15 mins"
+      ],
+      "project_id": "6cjfRCgwFQWGmv3C",
+      "priority": 1
+    },
+    {
+      "id": "6cjqxX52gpHJw3hC",
+      "content": "Administration",
+      "description": "Documentation of all work. Cleaning repo and updating CMS.",
+      "created_at": "2025-08-29T07:31:48.769319Z",
+      "labels": [
+        "15 mins"
+      ],
+      "project_id": "6cjfRCgwFQWGmv3C",
+      "priority": 1
+    }
+  ]
+}

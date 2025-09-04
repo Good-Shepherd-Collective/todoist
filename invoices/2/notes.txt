@@ -1,0 +1,10 @@
+Invoice generated on 2025-09-04 14:41:27
+Invoice number: INV-202509-CZ5MAL57
+Customer: AISC
+Tasks from: 2025-09-04
+Total tasks: 6
+Total hours: 5.25
+Hourly rate: $40.00
+Total amount: $210.00
+
+Emailed Navid on Sept 4. 

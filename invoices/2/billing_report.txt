@@ -1,0 +1,81 @@
+
+BILLING REPORT: AISC
+Invoice Number: INV-202509-CZ5MAL57
+Generated: September 04, 2025
+Billing Period: 2025-09-04
+Due Date: 2025-10-04
+Total Completed Tasks: 6
+
+============================================================
+
+COMPLETED WORK SUMMARY:
+
+1. Administration
+   Duration: 15m
+   Completed: 09/04/2025
+   
+   Description: Updated documentation and communications.
+   
+----------------------------------------
+
+2. Navigation & Polish
+   Duration: 15m
+   Completed: 09/04/2025
+   
+   Description: - Quick navigation text change ("ABOUT" → "HOME")
+- Final testing and minor adjustments
+   
+----------------------------------------
+
+3. Frontend Display Logic
+   Duration: 1h 30m
+   Completed: 09/04/2025
+   
+   Description: - Updating homepage blog post display with volume info and tags
+- Restructuring author display components across multiple pages
+- Implementing conditional rendering for new author types
+- Adding volume-issue display formatting ("Volume X - Issue Y")
+   
+----------------------------------------
+
+4. Frontend Query Updates
+   Duration: 1h
+   Completed: 09/04/2025
+   
+   Description: - Modifying all the +page.server.js files to handle new author structure
+- Updating blog listing queries for new sorting logic (order → featured → date)
+- Ensuring backward compatibility for existing author data
+   
+----------------------------------------
+
+5. Backend Schema Implementation (1.5 hours)
+   Duration: 1h 30m
+   Completed: 09/04/2025
+   
+   Description: - Restructuring the author field with authorType and conditional fields
+- Adding tags, order, and issue fields to respective schemas
+- Updating schema exports and structure.js with new nested organization
+- Testing schema changes in Sanity Studio
+   
+----------------------------------------
+
+6. Schema Design & Planning
+   Duration: 45m
+   Completed: 09/04/2025
+   
+   Description: - Analyzing requirements for tags, ordering, and author restructuring
+- Planning the author object structure to handle both member bios and standalone authors
+- Designing the volume-issue relationship
+   
+----------------------------------------
+
+
+SUMMARY:
+- Total tasks completed: 6
+- Project: AISC
+- Total hours: 5.25
+- Rate: $40.00/hr
+- Amount due: $210.00
+- Report generated: September 04, 2025 at 02:41 PM
+
+For questions about this billing report, please contact Cody

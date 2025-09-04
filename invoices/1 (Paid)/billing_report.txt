@@ -1,0 +1,77 @@
+
+BILLING REPORT: AISC
+Invoice Number: INV-202508-5351FE8C
+Generated: August 29, 2025
+Billing Period: 2025-08
+Total Completed Tasks: 7
+
+============================================================
+
+COMPLETED WORK SUMMARY:
+
+1. Handle DNS for anti-imperialist and vercel integration
+   Duration: 15 mins
+   Completed: 08/29/2025
+   
+   Description: Updated DNS records within Namecheap to point to Vercel's nameservers. This action was necessary to properly configure the domain for use with the Vercel hosting platform, enabling successful deployment and access to the website. This ensures optimal performance and availability of the website.
+   
+----------------------------------------
+
+2. Add Substack to website
+   Duration: 15 mins
+   Completed: 08/29/2025
+   
+   Description: Embedded a Substack signup form into the client website, customizing the styling to match the existing design. This integration allows website visitors to easily subscribe to the client's Substack newsletter, growing their audience and email marketing list directly from their website. Ensured proper functionality and confirmed that new subscribers are successfully added to the Substack email list.
+   
+----------------------------------------
+
+3. Change CORS policies
+   Duration: 15 mins
+   Completed: 08/29/2025
+   
+   Description: Updated Cross-Origin Resource Sharing (CORS) policies to enable secure communication between the website and the Content Management System (CMS). This ensures proper functionality of CMS integrations and prevents unauthorized access, maintaining data integrity and website security.
+   
+----------------------------------------
+
+4. Administration
+   Duration: 15 mins
+   Completed: 08/29/2025
+   
+   Description: Documentation of all work performed was completed to maintain accurate records for project tracking and future reference. The repository was cleaned and the CMS updated to ensure optimal system performance and data integrity, contributing to improved efficiency and data management.
+   
+----------------------------------------
+
+5. Refactor site for Vercel deployment
+   Duration: 45 mins
+   Completed: 08/29/2025
+   
+   Description: The website codebase was refactored to ensure compatibility with the Vercel hosting platform. This refactoring streamlines deployment and hosting processes, consolidating project management to a single platform and reducing operational overhead. This migration will improve site reliability and simplify future updates.
+   
+----------------------------------------
+
+6. Advise email migration
+   Duration: 15 mins
+   Completed: 08/29/2025
+   
+   Description: Provided consultation and recommendations regarding the client's email migration options. This guidance ensured the client understood the available solutions, potential risks, and best practices for a seamless transition, minimizing disruption to their business operations.
+   
+----------------------------------------
+
+7. Add .ico file
+   Duration: 20 mins
+   Completed: 08/29/2025
+   
+   Description: Updated the website's favicon by creating a new .ico file from the client's logo in Photoshop. This ensures brand consistency across all browser tabs and bookmarks, improving user experience and reinforcing brand recognition. A consistent favicon also contributes to a more professional and polished online presence.
+   
+----------------------------------------
+
+
+SUMMARY:
+- Total tasks completed: 7
+- Project: AISC
+- Total hours: 2.33
+- Rate: $40/hr
+- Amount due: $93.20
+- Report generated: August 29, 2025 at 09:27 PM
+
+For questions about this billing report, please contact Cody

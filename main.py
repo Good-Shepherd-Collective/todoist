@@ -482,7 +482,12 @@ def main():
             'created_at': item.get('added_at'),
             'labels': item.get('labels', []),
             'project_id': item.get('project_id'),
-            'priority': item.get('priority')
+            'priority': item.get('priority'),
+            'billed': '',
+            'paid': '',
+            'billed_date': '',
+            'billing_period_start': '',
+            'billing_period_end': ''
         }
         output['completed_tasks'].append(task_data)
     
@@ -495,7 +500,12 @@ def main():
             'created_at': task.get('added_at'),  # Active tasks use 'added_at' field
             'labels': task.get('labels', []),
             'project_id': task.get('project_id'),
-            'priority': task.get('priority')
+            'priority': task.get('priority'),
+            'billed': '',
+            'paid': '',
+            'billed_date': '',
+            'billing_period_start': '',
+            'billing_period_end': ''
         }
         output['active_tasks'].append(task_data)
     
